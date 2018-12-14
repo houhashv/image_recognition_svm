@@ -335,7 +335,7 @@ class CVPipeline:
         :param kwargs:
         :return:
         """
-        self.best_error = error
+        self.best_error_tuning = error
 
         for hyper, values in kwargs.items():
 

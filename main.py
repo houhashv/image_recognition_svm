@@ -10,6 +10,9 @@ from CVPipelines.CVPipelineLinear import CVPipelineLinear
 from CVPipelines.CVPipelineNonLinear import CVPipelineNonLinear
 import time
 import os
+import pickle
+import pandas as pd
+
 
 def main():
 
@@ -50,7 +53,7 @@ def main():
     print("time for report_results in seconds is {}".format((time.time() - new_time)))
 
     print("")
-
+    start_time = time.time()
     print("non linear model")
     pipeline_non_linear.get_data()
     print("time for get_data in seconds is {}".format((time.time() - start_time)))
@@ -79,4 +82,11 @@ def main():
     print("the total time in minutes is {}".format((time.time() - start_time) / 60))
 
 if __name__ == "__main__":
-    main()
+
+    # main()
+    hyper_params_linear = pickle.load(open("results/hyper_params_linear.p", "rb"))
+    stats_linear = pickle.load(open("results/stats_linear.p", "rb"))
+    df = pd.DataFrame(stats_linear)
+    print(df[df["error"] == min(df["error"])])
+    df.shape
+
