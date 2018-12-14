@@ -84,8 +84,8 @@ class CVPipeline:
                                            }
 
         self.params["max_data_size"] = self._train_size * 2
-        self.params["chance_to_use_sift"] = 0.9
-        self.params["chance_to_use_sift_of_image"] = 0.5
+        self.params["chance_to_use_sift"] = 0.4
+        self.params["chance_to_use_sift_of_image"] = 0.2
         self.results = dict()
         self.results["confusion_matrix"] = None
 
