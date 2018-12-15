@@ -85,7 +85,7 @@ class CVPipeline:
 
         self.params["max_data_size"] = self._train_size * 2
         self.params["chance_to_use_sift"] = 0.4
-        self.params["chance_to_use_sift_of_image"] = 0.2
+        self.params["chance_to_use_image"] = 0.2
         self.results = dict()
         self.results["confusion_matrix"] = None
 
@@ -241,7 +241,7 @@ class CVPipeline:
         :return:
         """
         sample_sifts = None
-        sample_images = [i for i in data if random.random() <= self.params["chance_to_use_sift_of_image"]]
+        sample_images = [i for i in data if random.random() <= self.params["chance_to_use_image"]]
 
         for img in sample_images:
 
@@ -335,7 +335,7 @@ class CVPipeline:
         :param kwargs:
         :return:
         """
-        self.best_error = error
+        self.best_error_tuning = error
 
         for hyper, values in kwargs.items():
 
