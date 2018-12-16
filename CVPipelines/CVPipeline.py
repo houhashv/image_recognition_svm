@@ -27,6 +27,7 @@ class CVPipeline:
         self.pipeline_type = pipeline_type
         self.results_path = results
         self.kernel = None
+        self.seed = seed
 
         self._min_s = 80
         self._max_x = 400
@@ -90,8 +91,6 @@ class CVPipeline:
         self.results["confusion_matrix"] = None
 
         self.dictionaries = {}
-
-        random.seed(seed)
 
         sample_indices = random.sample(range(101), self._num_of_classes * 2)
 
@@ -249,6 +248,7 @@ class CVPipeline:
             sample_size = int(dense_feat[1].shape[0] * self.params["chance_to_use_sift"])
             if sample_size == dense_feat[1].shape[0]:
                 print(dense_feat[1].shape[0], data, s, k, scale, m)
+
             sample_indexes = random.sample(range(0, dense_feat[1].shape[0]), sample_size)
 
             if sample_sifts is None:
@@ -469,27 +469,42 @@ class CVPipeline:
 
     def plotHyperParameters(self):
 
-        stats_linear = pickle.load(open(os.getcwd() + "/results/stats_linear.p", "rb"))
-        df = pd.DataFrame(stats_linear)
-        bestHyperParameter = df[df["error"] == min(df["error"])].iloc[0]
-        S_range = df.loc[(df["K"] == bestHyperParameter["K"]) & (df["C"] == bestHyperParameter["C"]) & (df["M"]==bestHyperParameter["M"])&(df["degree"]==bestHyperParameter["degree"]) &(df["gamma"]==bestHyperParameter["gamma"])&(df["radii"]==bestHyperParameter["radii"]) , ['S', 'error']]
-        C_range = df.loc[(df["K"] == bestHyperParameter["K"]) & (df["S"] == bestHyperParameter["S"]) & (df["M"]==bestHyperParameter["M"])&(df["degree"]==bestHyperParameter["degree"]) &(df["gamma"]==bestHyperParameter["gamma"])&(df["radii"]==bestHyperParameter["radii"]) , ['C', 'error']]
-        fig=plt.figure()
-        ax1 = fig.add_axes((.1, .4, .8, .5))
-        plt.plot(S_range["S"], S_range["error"])
-        plt.title('Validation Error VS. Image Size')
-        plt.xlabel('Image Size')
-        plt.ylabel('Validation Error')
-        textstr = 'Image Size was changed in 30 pixels steps from range of 80 to 400\nThe Image Size that got the best Validation error was 170 with 0.251366 error\nBest hyperparameters:\nK=%.2f, C=%.2f, M=%.2f ,Degree=%.2f, radii=%.2f\n' % (bestHyperParameter["K"], bestHyperParameter["C"],bestHyperParameter["M"],bestHyperParameter["degree"],bestHyperParameter["radii"])
-        fig.text(.1, .1, textstr)
-        plt.show()
-        fig = plt.figure()
-        ax1 = fig.add_axes((.1, .4, .8, .5))
-        plt.plot(C_range["C"], C_range["error"])
-        plt.title('Validation Error VS. C the SVM tradeoff parameter')
-        plt.xlabel('C')
-        plt.ylabel('Validation Error')
-        textstr = 'The parameter C was changed from 0.0001 to 10000 in x10 steps\nThe parameter C that got the best Validation error was 100 with 0.251366 error\nBest hyperparameters:\nK=%.2f, S=%.2f, M=%.2f ,Degree=%.2f, radii=%.2f\n' % ( bestHyperParameter["K"], bestHyperParameter["S"], bestHyperParameter["M"], bestHyperParameter["degree"],
-        bestHyperParameter["radii"])
-        fig.text(.1, .1, textstr)
-        plt.show()
+        stats_linear = pickle.load(open(os.getcwd() + "/results/stats_{}.p".format(self.kernel), "rb"))
+        df = pd.DataFrame(stats_linear).rename({"M": "sift_step_size_M", "radii": "sift_scale_radii"}, axis='columns')
+        bestHyperParameter = pickle.load(open(os.getcwd() + "/results/hyper_params_{}.p".format(self.kernel), "rb"))
+        exclude = ["error", "iteration", "time"]
+        exclude2 = exclude
+        if self.kernel == "linear":
+            exclude2 = exclude
+            exclude2 += ["gamma", "degree"]
+        else:
+            exclude2 += ["degree"]
+
+        keys = [key for key in bestHyperParameter.keys() if key not in exclude2]
+        for key in keys:
+            keys_next = [key1 for key1 in bestHyperParameter.keys() if key1 != key and key not in exclude]
+            ranges = df.loc[(df[keys_next[0]] == bestHyperParameter[keys_next[0]]["best"]["value"]) &
+                            (df[keys_next[1]] == bestHyperParameter[keys_next[1]]["best"]["value"]) &
+                            (df[keys_next[2]] == bestHyperParameter[keys_next[2]]["best"]["value"]) &
+                            (df[keys_next[3]] == bestHyperParameter[keys_next[3]]["best"]["value"]) &
+                            (df[keys_next[4]] == bestHyperParameter[keys_next[4]]["best"]["value"]) &
+                            (df[keys_next[5]] == bestHyperParameter[keys_next[5]]["best"]["value"]),
+                            [key, 'error']]
+            fig = plt.figure()
+            fig.add_axes((.1, .4, .8, .5))
+            ranges[key] = ranges[key].apply(lambda x: x if type(x) !=type("") else -1)
+            plt.plot(ranges[key], ranges["error"])
+            plt.title('Validation Error VS. {}'.format(key))
+            plt.xlabel(key)
+            plt.ylabel('Validation Error')
+            len_a = len(bestHyperParameter[key]["range"]) - 1
+            steps = len(bestHyperParameter[key]["range"])
+            range_0 = bestHyperParameter[key]["range"][0]
+            range_last = bestHyperParameter[key]["range"][len_a]
+            best_value = bestHyperParameter[key]["best"]["value"]
+            text = '{} was changed in {} pixels steps from range of {} to {}\n'.format(key, steps, range_0, range_last)
+            text += 'The {} that got the best Validation error was {}'.format(key, best_value)
+            fig.text(.1, .1, text)
+            plt.show()
+
+
