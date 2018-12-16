@@ -469,7 +469,7 @@ class CVPipeline:
 
     def plotHyperParameters(self):
 
-        stats_linear = pickle.load(open(os.getcwd() + "/CVPipelines/results/stats_linear.p", "rb"))
+        stats_linear = pickle.load(open(os.getcwd()  + "/CVPipelines/results/stats_linear.p", "rb"))
         df = pd.DataFrame(stats_linear)
         bestHyperParameter = df[df["error"] == min(df["error"])].iloc[0]
         S_range = df.loc[(df["K"] == bestHyperParameter["K"]) & (df["C"] == bestHyperParameter["C"]) & (df["M"]==bestHyperParameter["M"])&(df["degree"]==bestHyperParameter["degree"]) &(df["gamma"]==bestHyperParameter["gamma"])&(df["radii"]==bestHyperParameter["radii"]) , ['S', 'error']]
