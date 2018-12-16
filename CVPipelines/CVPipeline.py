@@ -464,7 +464,7 @@ class CVPipeline:
         """
         print("the error on the test dataset is:{}".format(self.error_test))
         print("the confusion_matrix over the test dataset is: \n{}".format(self.confusion_matrix))
-        self.plotHyperParameters(self)
+        self.plotHyperParameters()
         self._largest_margin()
 
     def plotHyperParameters(self):
@@ -474,6 +474,8 @@ class CVPipeline:
         bestHyperParameter = df[df["error"] == min(df["error"])].iloc[0]
         S_range = df.loc[(df["K"] == bestHyperParameter["K"]) & (df["C"] == bestHyperParameter["C"]) & (df["M"]==bestHyperParameter["M"])&(df["degree"]==bestHyperParameter["degree"]) &(df["gamma"]==bestHyperParameter["gamma"])&(df["radii"]==bestHyperParameter["radii"]) , ['S', 'error']]
         C_range = df.loc[(df["K"] == bestHyperParameter["K"]) & (df["S"] == bestHyperParameter["S"]) & (df["M"]==bestHyperParameter["M"])&(df["degree"]==bestHyperParameter["degree"]) &(df["gamma"]==bestHyperParameter["gamma"])&(df["radii"]==bestHyperParameter["radii"]) , ['C', 'error']]
+        K_range = df.loc[(df["C"] == bestHyperParameter["C"]) & (df["S"]== bestHyperParameter["S"]) & (df["M"]==bestHyperParameter["M"])&(df["degree"]==bestHyperParameter["degree"]) &(df["gamma"]==bestHyperParameter["gamma"])&(df["radii"]==bestHyperParameter["radii"]) , ['K', 'error']]
+        M_range = df.loc[(df["C"] == bestHyperParameter["C"]) & (df["S"] == bestHyperParameter["S"]) & (df["K"] == bestHyperParameter["K"]) & (df["degree"] == bestHyperParameter["degree"]) & (   df["gamma"] == bestHyperParameter["gamma"]) & (df["radii"] == bestHyperParameter["radii"]), [ 'M', 'error']]
         fig=plt.figure()
         ax1 = fig.add_axes((.1, .4, .8, .5))
         plt.plot(S_range["S"], S_range["error"])
@@ -490,6 +492,26 @@ class CVPipeline:
         plt.xlabel('C')
         plt.ylabel('Validation Error')
         textstr = 'The parameter C was changed from 0.0001 to 10000 in x10 steps\nThe parameter C that got the best Validation error was 100 with 0.251366 error\nBest hyperparameters:\nK=%.2f, S=%.2f, M=%.2f ,Degree=%.2f, radii=%.2f\n' % ( bestHyperParameter["K"], bestHyperParameter["S"], bestHyperParameter["M"], bestHyperParameter["degree"],
+        bestHyperParameter["radii"])
+        fig.text(.1, .1, textstr)
+        plt.show()
+        fig = plt.figure()
+        ax1 = fig.add_axes((.1, .4, .8, .5))
+        plt.plot(K_range["K"], K_range["error"])
+        plt.title('Validation Error VS. K Clusters')
+        plt.xlabel('K Clusters')
+        plt.ylabel('Validation Error')
+        textstr = 'The K clusters were changed from 100 to 900 in 100 step sizes\nThe K that got the best Validation error was 700 with 0.251366 error\nBest hyperparameters:\nC=%.2f, S=%.2f, M=%.2f ,Degree=%.2f, radii=%.2f\n' % ( bestHyperParameter["C"], bestHyperParameter["S"], bestHyperParameter["M"], bestHyperParameter["degree"],
+        bestHyperParameter["radii"])
+        fig.text(.1, .1, textstr)
+        plt.show()
+        fig = plt.figure()
+        ax1 = fig.add_axes((.1, .4, .8, .5))
+        plt.plot(M_range["M"], M_range["error"])
+        plt.title('Validation Error VS. M pixel spacing parameter')
+        plt.xlabel('pixel spacing')
+        plt.ylabel('Validation Error')
+        textstr = 'The SIFT pixel spacing parameter M was changed from 5 to 10\nThe M that got the best Validation error was 5 with 0.251366 error\nBest hyperparameters:\nC=%.2f, S=%.2f, K=%.2f ,Degree=%.2f, radii=%.2f\n' % ( bestHyperParameter["C"], bestHyperParameter["S"], bestHyperParameter["K"], bestHyperParameter["degree"],
         bestHyperParameter["radii"])
         fig.text(.1, .1, textstr)
         plt.show()
