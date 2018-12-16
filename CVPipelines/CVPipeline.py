@@ -465,4 +465,32 @@ class CVPipeline:
         """
         print("the error on the test dataset is:{}".format(self.error_test))
         print("the confusion_matrix over the test dataset is: \n{}".format(self.confusion_matrix))
+        self.plotHyperParameters(self)
         self._largest_margin()
+
+    def plotHyperParameters(self):
+
+        stats_linear = pickle.load(open(os.getcwd() + "/CVPipelines/results/stats_linear.p", "rb"))
+        df = pd.DataFrame(stats_linear)
+        bestHyperParameter = df[df["error"] == min(df["error"])].iloc[0]
+        S_range = df.loc[(df["K"] == bestHyperParameter["K"]) & (df["C"] == bestHyperParameter["C"]) & (df["M"]==bestHyperParameter["M"])&(df["degree"]==bestHyperParameter["degree"]) &(df["gamma"]==bestHyperParameter["gamma"])&(df["radii"]==bestHyperParameter["radii"]) , ['S', 'error']]
+        C_range = df.loc[(df["K"] == bestHyperParameter["K"]) & (df["S"] == bestHyperParameter["S"]) & (df["M"]==bestHyperParameter["M"])&(df["degree"]==bestHyperParameter["degree"]) &(df["gamma"]==bestHyperParameter["gamma"])&(df["radii"]==bestHyperParameter["radii"]) , ['C', 'error']]
+        fig=plt.figure()
+        ax1 = fig.add_axes((.1, .4, .8, .5))
+        plt.plot(S_range["S"], S_range["error"])
+        plt.title('Validation Error VS. Image Size')
+        plt.xlabel('Image Size')
+        plt.ylabel('Validation Error')
+        textstr = 'Image Size was changed in 30 pixels steps from range of 80 to 400\nThe Image Size that got the best Validation error was 170 with 0.251366 error\nBest hyperparameters:\nK=%.2f, C=%.2f, M=%.2f ,Degree=%.2f, radii=%.2f\n' % (bestHyperParameter["K"], bestHyperParameter["C"],bestHyperParameter["M"],bestHyperParameter["degree"],bestHyperParameter["radii"])
+        fig.text(.1, .1, textstr)
+        plt.show()
+        fig = plt.figure()
+        ax1 = fig.add_axes((.1, .4, .8, .5))
+        plt.plot(C_range["C"], C_range["error"])
+        plt.title('Validation Error VS. C the SVM tradeoff parameter')
+        plt.xlabel('C')
+        plt.ylabel('Validation Error')
+        textstr = 'The parameter C was changed from 0.0001 to 10000 in x10 steps\nThe parameter C that got the best Validation error was 100 with 0.251366 error\nBest hyperparameters:\nK=%.2f, S=%.2f, M=%.2f ,Degree=%.2f, radii=%.2f\n' % ( bestHyperParameter["K"], bestHyperParameter["S"], bestHyperParameter["M"], bestHyperParameter["degree"],
+        bestHyperParameter["radii"])
+        fig.text(.1, .1, textstr)
+        plt.show()
