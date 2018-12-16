@@ -80,17 +80,17 @@ def main():
 
 if __name__ == "__main__":
 
-    # main()
-    fold1 = [x for x in range(0, 10)]
-    class_indices = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    path_photos = "C:/Users/yossi/Downloads/101_ObjectCategories"
-    path_results = os.getcwd() + "/results"
-
-    pipeline_linear = CVPipelineLinear("dense SIFT + KMEANS + linear SVM", fold1=fold1, fold2=class_indices,
-                                       path=path_photos, results=path_results)
-    pipeline_non_linear = CVPipelineNonLinear("dense SIFT + KMEANS + RBF kernel SVM", fold1=fold1, fold2=class_indices,
-                                              path=path_photos, kernel="rbf", results=path_results)
-
-    pipeline_linear.plotHyperParameters()
-    pipeline_non_linear.plotHyperParameters()
+    main()
+    # fold1 = [x for x in range(0, 10)]
+    # class_indices = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    # path_photos = "C:/Users/yossi/Downloads/101_ObjectCategories"
+    # path_results = os.getcwd() + "/results"
+    #
+    # pipeline_linear = CVPipelineLinear("dense SIFT + KMEANS + linear SVM", fold1=fold1, fold2=class_indices,
+    #                                    path=path_photos, results=path_results)
+    # pipeline_non_linear = CVPipelineNonLinear("dense SIFT + KMEANS + RBF kernel SVM", fold1=fold1, fold2=class_indices,
+    #                                           path=path_photos, kernel="rbf", results=path_results)
+    #
+    # pipeline_linear.plot_hyper_parameters()
+    # pipeline_non_linear.plot_hyper_parameters()
 

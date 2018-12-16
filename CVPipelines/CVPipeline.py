@@ -50,14 +50,6 @@ class CVPipeline:
         self._gamma_range = ['auto']
         self._degree_range = [3]
 
-        # self._S_range = range(80, 100, 20)
-        # self._K_range = [x for x in range(100, 200, 100)]
-        # self._C_range = [1]
-        # self._sift_step_size_M_range = [5]
-        # self._sift_scale_radii_range = [8]
-        # self._gamma_range = ['auto']
-        # self._degree_range = [3]
-
         self._best_dummy = 1
         self._best_i_dummy = -1
 
@@ -167,7 +159,6 @@ class CVPipeline:
                 for i in self._images:
                     image_path = self.params["path"] + "/{}/".format(image_class) + all_images[i]
                     img = cv2.imread(image_path, 1)
-                    # dimensions.append(img.shape)
                     self.data["fold{}".format(ind + 1)]["full_data"]["labels"].append(image_class)
                     self.data["fold{}".format(ind + 1)]["full_data"]["features"].append(img)
 
@@ -182,9 +173,6 @@ class CVPipeline:
                     img_g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                     img_resize = cv2.resize(img_g, (s, s))
                     self.data["fold{}".format(ind + 1)]["full_data"]["features_prepare"][s].append(img_resize)
-                # plt.figure(figsize=(20, 10))
-                # plt.imshow(img)
-                # plt.show()
 
     def split_the_data(self):
         """
@@ -200,11 +188,11 @@ class CVPipeline:
                         data["full_data"]["features_prepare"][s][indexes[0]:indexes[self._train_size]]
 
                     data["validation" if i == 0 else "test"]["features"][s] += \
-                        data["full_data"]["features_prepare"][s][indexes[self._train_size]:indexes[-1]]
+                        data["full_data"]["features_prepare"][s][indexes[self._train_size]:indexes[-1] + 1]
 
                 data["train"]["labels"] += data["full_data"]["labels"][indexes[0]:indexes[self._train_size]]
                 data["validation" if i == 0 else "test"]["labels"] += \
-                    data["full_data"]["labels"][indexes[self._train_size]:indexes[-1]]
+                    data["full_data"]["labels"][indexes[self._train_size]:indexes[-1] + 1]
 
     def get_default_parameters(self):
         """
@@ -464,14 +452,17 @@ class CVPipeline:
         """
         print("the error on the test dataset is:{}".format(self.error_test))
         print("the confusion_matrix over the test dataset is: \n{}".format(self.confusion_matrix))
-        self.plotHyperParameters()
+        self.plot_hyper_parameters()
         self._largest_margin()
 
-    def plotHyperParameters(self):
+    def plot_hyper_parameters(self):
+        """
 
+        :return:
+        """
         stats_linear = pickle.load(open(os.getcwd() + "/results/stats_{}.p".format(self.kernel), "rb"))
         df = pd.DataFrame(stats_linear).rename({"M": "sift_step_size_M", "radii": "sift_scale_radii"}, axis='columns')
-        bestHyperParameter = pickle.load(open(os.getcwd() + "/results/hyper_params_{}.p".format(self.kernel), "rb"))
+        best_hyper_parameter = pickle.load(open(os.getcwd() + "/results/hyper_params_{}.p".format(self.kernel), "rb"))
         exclude = ["error", "iteration", "time"]
         exclude2 = exclude
         if self.kernel == "linear":
@@ -480,15 +471,15 @@ class CVPipeline:
         else:
             exclude2 += ["degree"]
 
-        keys = [key for key in bestHyperParameter.keys() if key not in exclude2]
+        keys = [key for key in best_hyper_parameter.keys() if key not in exclude2]
         for key in keys:
-            keys_next = [key1 for key1 in bestHyperParameter.keys() if key1 != key and key not in exclude]
-            ranges = df.loc[(df[keys_next[0]] == bestHyperParameter[keys_next[0]]["best"]["value"]) &
-                            (df[keys_next[1]] == bestHyperParameter[keys_next[1]]["best"]["value"]) &
-                            (df[keys_next[2]] == bestHyperParameter[keys_next[2]]["best"]["value"]) &
-                            (df[keys_next[3]] == bestHyperParameter[keys_next[3]]["best"]["value"]) &
-                            (df[keys_next[4]] == bestHyperParameter[keys_next[4]]["best"]["value"]) &
-                            (df[keys_next[5]] == bestHyperParameter[keys_next[5]]["best"]["value"]),
+            keys_next = [key1 for key1 in best_hyper_parameter.keys() if key1 != key and key not in exclude]
+            ranges = df.loc[(df[keys_next[0]] == best_hyper_parameter[keys_next[0]]["best"]["value"]) &
+                            (df[keys_next[1]] == best_hyper_parameter[keys_next[1]]["best"]["value"]) &
+                            (df[keys_next[2]] == best_hyper_parameter[keys_next[2]]["best"]["value"]) &
+                            (df[keys_next[3]] == best_hyper_parameter[keys_next[3]]["best"]["value"]) &
+                            (df[keys_next[4]] == best_hyper_parameter[keys_next[4]]["best"]["value"]) &
+                            (df[keys_next[5]] == best_hyper_parameter[keys_next[5]]["best"]["value"]),
                             [key, 'error']]
             fig = plt.figure()
             fig.add_axes((.1, .4, .8, .5))
@@ -497,14 +488,12 @@ class CVPipeline:
             plt.title('Validation Error VS. {}'.format(key))
             plt.xlabel(key)
             plt.ylabel('Validation Error')
-            len_a = len(bestHyperParameter[key]["range"]) - 1
-            steps = len(bestHyperParameter[key]["range"])
-            range_0 = bestHyperParameter[key]["range"][0]
-            range_last = bestHyperParameter[key]["range"][len_a]
-            best_value = bestHyperParameter[key]["best"]["value"]
+            len_a = len(best_hyper_parameter[key]["range"]) - 1
+            steps = len(best_hyper_parameter[key]["range"])
+            range_0 = best_hyper_parameter[key]["range"][0]
+            range_last = best_hyper_parameter[key]["range"][len_a]
+            best_value = best_hyper_parameter[key]["best"]["value"]
             text = '{} was changed in {} pixels steps from range of {} to {}\n'.format(key, steps, range_0, range_last)
             text += 'The {} that got the best Validation error was {}'.format(key, best_value)
             fig.text(.1, .1, text)
             plt.show()
-
-
