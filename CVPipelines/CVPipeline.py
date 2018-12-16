@@ -44,8 +44,7 @@ class CVPipeline:
         self._S_range = range(self._min_s, self._max_x, self._x_step)
         self._K_range = [x for x in range(self._min_clusters, self._max_clusters, self._clusters_step)]
         self._C_range = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000]
-        # self._sift_step_size_M_range = [5, 10]
-        self._sift_step_size_M_range = [10]
+        self._sift_step_size_M_range = [5, 10]
         self._sift_scale_radii_range = [8, 16, 24, 32]
         self._gamma_range = ['auto']
         self._degree_range = [3]
@@ -258,10 +257,7 @@ class CVPipeline:
                 sample_sifts = np.append(sample_sifts, dense_feat[1][sample_indexes], axis=0)
 
         kmeans = KMeans(n_clusters=k)
-        try:
-            kmeans.fit(sample_sifts)
-        except:
-            return False
+        kmeans.fit(sample_sifts)
         self.dictionaries[s] = kmeans
 
     def represent(self, data=None, s=None, k=None, scale=None, m=None, fold=None, dataset=None):

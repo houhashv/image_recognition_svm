@@ -17,9 +17,9 @@ import pandas as pd
 def main():
 
     fold1 = [x for x in range(0, 10)]
-    class_indices = [51, 48, 80, 54, 37, 86, 98, 32, 90, 38]
-    path_photos = "C:/Users/yossi/Downloads/101_ObjectCategories"
-    path_results = os.getcwd() + "/results"
+    class_indices = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    path_photos = "C:/Users/idan/Downloads/101_ObjectCategories/101_ObjectCategories"
+    path_results = os.getcwd() + "/CVPipelines/results"
 
     pipeline_linear = CVPipelineLinear("dense SIFT + KMEANS + linear SVM", fold1=fold1, fold2=class_indices,
                                        path=path_photos, results=path_results)
