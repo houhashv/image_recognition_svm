@@ -84,13 +84,11 @@ def main():
 if __name__ == "__main__":
 
     main()
-    # hyper_params_linear = pickle.load(open(os.getcwd() + "/CVPipelines/results/hyper_params_linear.p", "rb"))
-    # stats_linear = pickle.load(open(os.getcwd() + "/CVPipelines/results/stats_linear.p", "rb"))
-    # df = pd.DataFrame(stats_linear)
-    # print(df[df["error"] == min(df["error"])])
-    # df[df["C"]==100.0 and df["K"] == 700 and df["M"] == ]
-    # df.shape
-    # df.error.plot()
+    hyper_params_linear = pickle.load(open("results/hyper_params_rbf.p", "rb"))
+    stats_linear = pickle.load(open("results/stats_rbf.p", "rb"))
+    df = pd.DataFrame(stats_linear)
+    print(df[df["error"] == min(df["error"])])
+    df.shape
 
     # stats_linear = pickle.load(open(os.getcwd() + "/CVPipelines/results/stats_linear.p", "rb"))
     # df = pd.DataFrame(stats_linear)
