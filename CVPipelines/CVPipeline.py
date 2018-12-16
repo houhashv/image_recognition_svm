@@ -85,7 +85,7 @@ class CVPipeline:
                                            }
 
         self.params["max_data_size"] = self._train_size * 2
-        self.params["chance_to_use_sift"] = 0.4
+        self.params["chance_to_use_sift"] = 0.5
         self.params["chance_to_use_image"] = 0.2
         self.results = dict()
         self.results["confusion_matrix"] = None
@@ -258,7 +258,10 @@ class CVPipeline:
                 sample_sifts = np.append(sample_sifts, dense_feat[1][sample_indexes], axis=0)
 
         kmeans = KMeans(n_clusters=k)
-        kmeans.fit(sample_sifts)
+        try:
+            kmeans.fit(sample_sifts)
+        except:
+            return False
         self.dictionaries[s] = kmeans
 
     def represent(self, data=None, s=None, k=None, scale=None, m=None, fold=None, dataset=None):
@@ -465,12 +468,12 @@ class CVPipeline:
         """
         print("the error on the test dataset is:{}".format(self.error_test))
         print("the confusion_matrix over the test dataset is: \n{}".format(self.confusion_matrix))
-        self.plotHyperParameters(self)
+        self.plotHyperParameters()
         self._largest_margin()
 
     def plotHyperParameters(self):
 
-        stats_linear = pickle.load(open(os.getcwd() + "/CVPipelines/results/stats_linear.p", "rb"))
+        stats_linear = pickle.load(open(os.getcwd() + "/results/stats_linear.p", "rb"))
         df = pd.DataFrame(stats_linear)
         bestHyperParameter = df[df["error"] == min(df["error"])].iloc[0]
         S_range = df.loc[(df["K"] == bestHyperParameter["K"]) & (df["C"] == bestHyperParameter["C"]) & (df["M"]==bestHyperParameter["M"])&(df["degree"]==bestHyperParameter["degree"]) &(df["gamma"]==bestHyperParameter["gamma"])&(df["radii"]==bestHyperParameter["radii"]) , ['S', 'error']]
