@@ -482,7 +482,7 @@ class CVPipeline:
         plt.title('Validation Error VS. Image Size')
         plt.xlabel('Image Size')
         plt.ylabel('Validation Error')
-        textstr = 'Image Size was changed in 30 pixels steps from range of 80 to 400\nThe Image Size that got the best Validation error was 170 with 0.251366 error\nBest hyperparameters:\nK=%.2f, C=%.2f, M=%.2f ,Degree=%.2f, radii=%.2f\n' % (bestHyperParameter["K"], bestHyperParameter["C"],bestHyperParameter["M"],bestHyperParameter["degree"],bestHyperParameter["radii"])
+        textstr = 'Image Size was changed in 30 pixels steps from range of 80 to 400\nThe Image Size that got the best Validation error was 170 with 0.251366 error\nBest hyperparameters:\nK=%.2f, C=%.2f, M=%.2f ,radii=%.2f\n' % (bestHyperParameter["K"], bestHyperParameter["C"],bestHyperParameter["M"],bestHyperParameter["radii"])
         fig.text(.1, .1, textstr)
         plt.show()
         fig = plt.figure()
@@ -491,8 +491,7 @@ class CVPipeline:
         plt.title('Validation Error VS. C the SVM tradeoff parameter')
         plt.xlabel('C')
         plt.ylabel('Validation Error')
-        textstr = 'The parameter C was changed from 0.0001 to 10000 in x10 steps\nThe parameter C that got the best Validation error was 100 with 0.251366 error\nBest hyperparameters:\nK=%.2f, S=%.2f, M=%.2f ,Degree=%.2f, radii=%.2f\n' % ( bestHyperParameter["K"], bestHyperParameter["S"], bestHyperParameter["M"], bestHyperParameter["degree"],
-        bestHyperParameter["radii"])
+        textstr = 'The parameter C was changed from 0.0001 to 10000 in x10 steps\nThe parameter C that got the best Validation error was 100 with 0.251366 error\nBest hyperparameters:\nK=%.2f, S=%.2f, M=%.2f , radii=%.2f\n' % ( bestHyperParameter["K"], bestHyperParameter["S"], bestHyperParameter["M"],bestHyperParameter["radii"])
         fig.text(.1, .1, textstr)
         plt.show()
         fig = plt.figure()
@@ -501,8 +500,7 @@ class CVPipeline:
         plt.title('Validation Error VS. K Clusters')
         plt.xlabel('K Clusters')
         plt.ylabel('Validation Error')
-        textstr = 'The K clusters were changed from 100 to 900 in 100 step sizes\nThe K that got the best Validation error was 700 with 0.251366 error\nBest hyperparameters:\nC=%.2f, S=%.2f, M=%.2f ,Degree=%.2f, radii=%.2f\n' % ( bestHyperParameter["C"], bestHyperParameter["S"], bestHyperParameter["M"], bestHyperParameter["degree"],
-        bestHyperParameter["radii"])
+        textstr = 'The K clusters were changed from 100 to 900 in 100 step sizes\nThe K that got the best Validation error was 700 with 0.251366 error\nBest hyperparameters:\nC=%.2f, S=%.2f, M=%.2f , radii=%.2f\n' % ( bestHyperParameter["C"], bestHyperParameter["S"], bestHyperParameter["M"],bestHyperParameter["radii"])
         fig.text(.1, .1, textstr)
         plt.show()
         fig = plt.figure()
@@ -511,7 +509,6 @@ class CVPipeline:
         plt.title('Validation Error VS. M pixel spacing parameter')
         plt.xlabel('pixel spacing')
         plt.ylabel('Validation Error')
-        textstr = 'The SIFT pixel spacing parameter M was changed from 5 to 10\nThe M that got the best Validation error was 5 with 0.251366 error\nBest hyperparameters:\nC=%.2f, S=%.2f, K=%.2f ,Degree=%.2f, radii=%.2f\n' % ( bestHyperParameter["C"], bestHyperParameter["S"], bestHyperParameter["K"], bestHyperParameter["degree"],
-        bestHyperParameter["radii"])
+        textstr = 'The SIFT pixel spacing parameter M was changed from 5 to 10\nThe M that got the best Validation error was 5 with 0.251366 error\nBest hyperparameters:\nC=%.2f, S=%.2f, K=%.2f , radii=%.2f\n' % ( bestHyperParameter["C"], bestHyperParameter["S"], bestHyperParameter["K"], bestHyperParameter["radii"])
         fig.text(.1, .1, textstr)
         plt.show()
