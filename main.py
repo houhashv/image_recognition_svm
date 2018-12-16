@@ -49,10 +49,11 @@ def main():
     print("time for report_results in seconds is {}".format((time.time() - new_time)))
     print("total time for the linear model in seconds is: {}".format(time.time() - start_time_model))
     print("")
+
     start_time_model = time.time()
     print("non linear model")
     pipeline_non_linear.get_data()
-    print("time for get_data in seconds is {}".format((time.time() - start_time)))
+    print("time for get_data in seconds is {}".format((time.time() - start_time_model)))
     new_time = time.time()
     pipeline_non_linear.data_preprocess()
     print("time for prepare in seconds is {}".format((time.time() - new_time)))
