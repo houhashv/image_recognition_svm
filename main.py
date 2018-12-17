@@ -6,7 +6,6 @@ from CVPipelines.CVPipelineLinear import CVPipelineLinear
 from CVPipelines.CVPipelineNonLinear import CVPipelineNonLinear
 import time
 import os
-import pickle
 
 
 def main():

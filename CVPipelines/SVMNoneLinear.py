@@ -88,6 +88,8 @@ class SVMNoneLinear:
                 classes.append(class_name)
                 i_values.append(cls.decision_function(np.array(sample).reshape(1, -1)))
 
-            predictions.append(classes)
+            # predictions.append(classes)
 
-        return np.asarray(predictions)
+        # return np.asarray(predictions)
+
+        return np.asarray(i_values)

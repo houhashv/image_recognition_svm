@@ -433,7 +433,9 @@ class CVPipeline:
 
         :return:
         """
-        for class_name in set(self.real_values_test):
+        classes = set(self.real_values_test)
+        print("classes in test: {}".format(classes))
+        for class_name in classes:
 
             samples_i = [(np.array(self.data_test_svm[i]).reshape(1, -1), self.real_values_test[i]) if self.real_values_test[i] == class_name
                          else None for i, value in enumerate(self.real_values_test)]
@@ -443,17 +445,23 @@ class CVPipeline:
             for i, sample in enumerate(samples_i):
 
                 if self.model.predict(sample[0]) != sample[1]:
-                    margin_errors.append((i, self.model.decision_function(sample[0])))
 
-    def report_results(self):
-        """
+                    scores = self.model.decision_function(sample[0])
+                    correct_index = self.fold2_dirs.index(sample[1])
+                    distance = scores[correct_index] - scores[np.argmax(scores)]
+                    margin_errors.append((i, distance))
 
-        :return:
-        """
-        print("the error on the test dataset is:{}".format(self.error_test))
-        print("the confusion_matrix over the test dataset is: \n{}".format(self.confusion_matrix))
-        self.plot_hyper_parameters()
-        self._largest_margin()
+            margin_errors_values = [x[1] for x in margin_errors]
+            margin_errors_values = sorted([x for x in margin_errors_values], reverse=True)\
+                [:min(2, len(margin_errors_values))]
+            margin_errors = [x[0] for x in margin_errors if x[1] in margin_errors_values]
+
+            for i in margin_errors:
+                path_folder = self.params["path"] + "/" + class_name
+                all_images = os.listdir(path_folder)
+                image_path = self.params["path"] + "/{}/".format(class_name) + all_images[20 + i]
+                mg = cv2.imread(image_path, -1)
+                cv2.imshow('image_{}_{}'.format(class_name, all_images[20 + i]), mg)
 
     def plot_hyper_parameters(self):
         """
@@ -472,6 +480,8 @@ class CVPipeline:
             exclude2 += ["degree"]
 
         keys = [key for key in best_hyper_parameter.keys() if key not in exclude2]
+        count = len(keys)
+
         for key in keys:
             keys_next = [key1 for key1 in best_hyper_parameter.keys() if key1 != key and key not in exclude]
             ranges = df.loc[(df[keys_next[0]] == best_hyper_parameter[keys_next[0]]["best"]["value"]) &
@@ -483,7 +493,7 @@ class CVPipeline:
                             [key, 'error']]
             fig = plt.figure()
             fig.add_axes((.1, .4, .8, .5))
-            ranges[key] = ranges[key].apply(lambda x: x if type(x) !=type("") else -1)
+            ranges[key] = ranges[key].apply(lambda x: x if type(x) != type("") else -1)
             plt.plot(ranges[key], ranges["error"])
             plt.title('Validation Error VS. {}'.format(key))
             plt.xlabel(key)
@@ -496,4 +506,15 @@ class CVPipeline:
             text = '{} was changed in {} pixels steps from range of {} to {}\n'.format(key, steps, range_0, range_last)
             text += 'The {} that got the best Validation error was {}'.format(key, best_value)
             fig.text(.1, .1, text)
-            plt.show()
+            count -= 1
+            plt.show(block=True if count == 0 else False)
+
+    def report_results(self):
+        """
+
+        :return:
+        """
+        print("the error on the test dataset is:{}".format(self.error_test))
+        print("the confusion_matrix over the test dataset is: \n{}".format(self.confusion_matrix))
+        self._largest_margin()
+        self.plot_hyper_parameters()
