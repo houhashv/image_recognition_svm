@@ -433,7 +433,8 @@ class CVPipeline:
 
         :return:
         """
-        classes = set(self.real_values_test)
+        classes = list(set(self.real_values_test))
+        classes.sort()
         print("classes in test: {}".format(classes))
         classes_check = []
         for class_name in classes:
@@ -467,7 +468,7 @@ class CVPipeline:
                     mg = cv2.imread(image_path, -1)
                     image_string = 'image_{}_{}'.format(class_name, all_images[20 + i[0]])
                     cv2.imshow(image_string, mg)
-                    print("error for: {}, is: {}".format(image_string, i[1]))
+                    print("error for: {}, is: {}, length: {}".format(image_string, i[1], len(margin_errors)))
 
     def plot_hyper_parameters(self):
         """
