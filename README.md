@@ -1,4 +1,4 @@
-# image classifier using Kmenas, dense SIFTs and Linear and None linear SVM
+# Image classifier using Kmenas, dense SIFTs and Linear and None linear SVM
 
 Implement an object recognition pipe
 Train it on a subset of the Caletch101 dataset
@@ -76,11 +76,12 @@ The report should include
 	Each graph should include a coherent and informative caption.
 	For each tuned hyper-parameter, a short explanation of the parameter should be included.
 
-	Test results:
-	The error rate obtained over the test set.
-	A confusion matrix (use sklearn.metrices.confusion_matrix(…)) and its analysis.
+###Test results:
+The error rate obtained over the test set.
+A confusion matrix (use sklearn.metrices.confusion_matrix(…)) and its analysis.
 
-	Error visualization: For each class, show images of the two largest errors on images of the class (i.e. images from the class which were miss-classified). The error images should be displayed only if they exist (i.e. if there are at least two errors from the class). If there is only one error from the class –show it, and if there are none – just state that there were no errors for this class.  By largest error I mean the images which got the lowest margin, following this definition:
-	Class_score(i): For SVM-based system Class_score(i) is defined as the SVM score of the i-th classifier. 
+###Error visualization: 
+For each class, show images of the two largest errors on images of the class (i.e. images from the class which were miss-classified). The error images should be displayed only if they exist (i.e. if there are at least two errors from the class). If there is only one error from the class –show it, and if there are none – just state that there were no errors for this class.  By largest error I mean the images which got the lowest margin, following this definition:
+Class_score(i): For SVM-based system Class_score(i) is defined as the SVM score of the i-th classifier. 
 The margin for an example of class i is Class_score(i)-max┬(j≠i)⁡〖Class_score(j)〗. This is the difference between the score of the correct class score and the maximal score of incorrect classes. Larger values indicate higher confidence. A value below 0 is an error.
 
