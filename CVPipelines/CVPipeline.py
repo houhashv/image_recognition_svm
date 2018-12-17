@@ -13,7 +13,7 @@ import random
 import cv2
 import time
 from sklearn.svm import LinearSVC
-from sklearn.svm import SVC
+from CVPipelines.SVMNoneLinear import SVMNoneLinear
 from sklearn.metrics import confusion_matrix
 import pickle
 import matplotlib.pyplot as plt
@@ -314,7 +314,7 @@ class CVPipeline:
         if self.kernel == "linear":
             return LinearSVC(C=c)
         else:
-            return SVC(kernel=self.kernel, C=c, degree=degree, gamma=gamma)
+            return SVMNoneLinear(kernel=self.kernel, C=c, degree=degree, gamma=gamma)
 
     def _best_update(self, error, **kwargs):
         """
