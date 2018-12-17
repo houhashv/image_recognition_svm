@@ -59,9 +59,10 @@ When training the dictionary, it is enough to extract some SIFTS from some image
 ## Required submission
 
 ## Code:
-	The code is required to run directly, without modifications, on my machine. 
-	This machine will have the all the required packages. The only modification in the code will be the path to the dataset folder. This path should appear at the beginning of the code in a variable named – “data_path”.
-	The code will be generic and will be able to run on any subset of 10 classes (from the 101 classes) by changing a single variable called class_indices which will be defined at the beginning of the main file, in one of the first 5 lines. class_indices will be a vector of 1*10 containing the indices of classes on which the experiment will run. For example:
+The code is runnig directly, without modifications, on any machine. 
+The only modification in the code will be the path to the dataset folder.
+This machine will gor to have all the required packages. This path should appear at the beginning of the code in a variable named – “data_path”.
+The code will be generic and will be able to run on any subset of 10 classes (from the 101 classes) by changing a single variable called class_indices which will be defined at the beginning of the main file, in one of the first 5 lines. class_indices will be a vector of 1*10 containing the indices of classes on which the experiment will run. For example:
 class_indices = [ 5 6 10 60 65 67 81 83 86 90]
 Important: The code you submit should set class_indices to "fold 2" classes, i.e.  class_indices = [11:20]. It should use fixed hyper parameters (the best configuration of hyper-parameters tested, found on "fold 1", i.e. classes [1:10]). However, I will test your code on an arbitrary set of classes. You should verify that it is able to run on such an arbitrary set.
 	The code should print to the python run as output the test error result (in a clear sentence) and the confusion matrix.
