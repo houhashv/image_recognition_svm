@@ -12,7 +12,7 @@ def main():
 
     fold1 = [x for x in range(0, 10)]
     class_indices = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    path_photos = "C:/Users/yossi/Downloads/101_ObjectCategories"
+    path_photos = "C:/Users/idan/Downloads/101_ObjectCategories/101_ObjectCategories"
     path_results = os.getcwd() + "/results"
 
     pipeline_linear = CVPipelineLinear("dense SIFT + KMEANS + linear SVM", fold1=fold1, fold2=class_indices,
@@ -80,7 +80,8 @@ def main():
 
 if __name__ == "__main__":
 
-    # main()
+    main()
+    '''
     fold1 = [x for x in range(0, 10)]
     class_indices = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     path_photos = "C:/Users/yossi/Downloads/101_ObjectCategories"
@@ -93,4 +94,4 @@ if __name__ == "__main__":
 
     pipeline_linear.plotHyperParameters()
     pipeline_non_linear.plotHyperParameters()
-
+    '''
