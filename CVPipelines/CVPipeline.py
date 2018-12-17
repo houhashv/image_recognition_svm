@@ -447,6 +447,7 @@ class CVPipeline:
                 if self.model.predict(sample[0]) != sample[1]:
 
                     scores = self.model.decision_function(sample[0])
+                    scores = scores if self.kernel != "linear" else scores[0]
                     correct_index = self.fold2_dirs.index(sample[1])
                     distance = scores[correct_index] - scores[np.argmax(scores)]
                     margin_errors.append((i, distance))
@@ -454,14 +455,16 @@ class CVPipeline:
             margin_errors_values = [x[1] for x in margin_errors]
             margin_errors_values = sorted([x for x in margin_errors_values], reverse=True)\
                 [:min(2, len(margin_errors_values))]
-            margin_errors = [x[0] for x in margin_errors if x[1] in margin_errors_values]
+            margin_errors = [x for x in margin_errors if x[1] in margin_errors_values]
 
             for i in margin_errors:
                 path_folder = self.params["path"] + "/" + class_name
                 all_images = os.listdir(path_folder)
-                image_path = self.params["path"] + "/{}/".format(class_name) + all_images[20 + i]
+                image_path = self.params["path"] + "/{}/".format(class_name) + all_images[20 + i[0]]
                 mg = cv2.imread(image_path, -1)
-                cv2.imshow('image_{}_{}'.format(class_name, all_images[20 + i]), mg)
+                image_string = 'image_{}_{}'.format(class_name, all_images[20 + i[0]])
+                cv2.imshow(image_string, mg)
+                print("error for: {}, is: {}".format(image_string, i[1]))
 
     def plot_hyper_parameters(self):
         """

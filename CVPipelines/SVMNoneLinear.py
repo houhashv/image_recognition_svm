@@ -92,4 +92,4 @@ class SVMNoneLinear:
 
         # return np.asarray(predictions)
 
-        return np.asarray(i_values)
+        return i_values
