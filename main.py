@@ -7,7 +7,6 @@ from CVPipelines.CVPipelineNonLinear import CVPipelineNonLinear
 import time
 import os
 
-
 def main():
 
     fold1 = [x for x in range(0, 10)]
