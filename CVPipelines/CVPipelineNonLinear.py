@@ -1,5 +1,4 @@
 from CVPipelines.CVPipeline import CVPipeline
-from CVPipelines.SVMNoneLinear import SVMNoneLinear
 
 
 class CVPipelineNonLinear(CVPipeline):
@@ -12,6 +11,5 @@ class CVPipelineNonLinear(CVPipeline):
         self.kernel = kernel
         self._gamma_range = ['auto', 0.001, 0.01, 0.1, 1]
         # self._gamma_range = ['auto', 0.001]
-
         self.params["hyper_parameters"]["gamma"] = {"range": self._gamma_range, "values": {x: [] for x in self._gamma_range},
                                                     "best": {"value": self._best_dummy, "i": self._best_i_dummy}}
