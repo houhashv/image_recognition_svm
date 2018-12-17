@@ -29,7 +29,7 @@ have less images for test)
 	Debug and tune your pipe on the first 10 classes (fold 1).
 	When the final configuration is debugged and stable, run the algorithm with the best hyper parameter configuration found on classes 11-20 (fold 2). 
 
-##Required packages:
+## Required packages:
 
 General packages: os, numpy, pickle, matplotlib, cv2
 SVM algorithm: sklearn (link). 
@@ -38,7 +38,7 @@ pip install opencv-python==3.4.2.16
 pip install opencv-contrib-python==3.4.2.16
 Kmeans algorithm: sklearn (link)
 
-##Important details for algorithms we use
+## Important details for algorithms we use
 
 ###SVM algorithm: 
 Important parameters - C the SVM tradeoff parameter, gamma when using an RBF kernel, degree the polynomial degree when using a polynomial kernel. 
@@ -51,21 +51,21 @@ In order implement "one vs. all" approach with a linear case of SVM, use "Linear
 	Compute the predicted class (an N×1 vector) by taking the argmax over the class score matrix columns (the highest score in the row determines the winning class) 
 	Return the predicted class and the class score matrix
 
-###SIFT algorithm: 
+### SIFT algorithm: 
 We extract SIFTs around every point in a dense 2D grid of points over the image. The grid stride\step (i.e. the distance between points) is likely to be an important parameter. Also, at each point SIFTS may be extracted at multiple scales. I suggest using the scales used at http://vision.cse.psu.edu/seminars/talks/2009/random_tff/bosch07a.pdf, section 5,’Appearance’. This is a good starting point.
 Kmeans algorithm: 
 When training the dictionary, it is enough to extract some SIFTS from some images (that is: you do not have to use all the SIFTS from all the images).  For example, using a subset of 100 SIFTS from 1000 images (100,000 SIFTs overall) should be enough for good clustering). The most Important Parameter is K (n_clusters). Several hundred is a good area to look in.
 
-##Required submission
+## Required submission
 
-##Code:
+## Code:
 	The code is required to run directly, without modifications, on my machine. 
 	This machine will have the all the required packages. The only modification in the code will be the path to the dataset folder. This path should appear at the beginning of the code in a variable named – “data_path”.
 	The code will be generic and will be able to run on any subset of 10 classes (from the 101 classes) by changing a single variable called class_indices which will be defined at the beginning of the main file, in one of the first 5 lines. class_indices will be a vector of 1*10 containing the indices of classes on which the experiment will run. For example:
 class_indices = [ 5 6 10 60 65 67 81 83 86 90]
 Important: The code you submit should set class_indices to "fold 2" classes, i.e.  class_indices = [11:20]. It should use fixed hyper parameters (the best configuration of hyper-parameters tested, found on "fold 1", i.e. classes [1:10]). However, I will test your code on an arbitrary set of classes. You should verify that it is able to run on such an arbitrary set.
 	The code should print to the python run as output the test error result (in a clear sentence) and the confusion matrix.
-##Report:
+## Report:
 The report should include
 	Hyper parameter tuning graphs (use matplotlib package for plotting):  The pipe includes hyper parameters (like S – the image size,  K – the number of codewords for Kmeans, C – the SVM tradeoff parameter, etc..).  Such parameters should be tuned to get good accuracy.  I list below the most important hyper parameters for each module, but you may consider tuning other parameters. 
 	For at least two parameters, systematic tuning should be done, in which:
@@ -76,11 +76,11 @@ The report should include
 	Each graph should include a coherent and informative caption.
 	For each tuned hyper-parameter, a short explanation of the parameter should be included.
 
-###Test results:
+### Test results:
 The error rate obtained over the test set.
 A confusion matrix (use sklearn.metrices.confusion_matrix(…)) and its analysis.
 
-###Error visualization: 
+### Error visualization: 
 For each class, show images of the two largest errors on images of the class (i.e. images from the class which were miss-classified). The error images should be displayed only if they exist (i.e. if there are at least two errors from the class). If there is only one error from the class –show it, and if there are none – just state that there were no errors for this class.  By largest error I mean the images which got the lowest margin, following this definition:
 Class_score(i): For SVM-based system Class_score(i) is defined as the SVM score of the i-th classifier. 
 The margin for an example of class i is Class_score(i)-max┬(j≠i)⁡〖Class_score(j)〗. This is the difference between the score of the correct class score and the maximal score of incorrect classes. Larger values indicate higher confidence. A value below 0 is an error.
