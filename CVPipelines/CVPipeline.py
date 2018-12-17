@@ -435,36 +435,39 @@ class CVPipeline:
         """
         classes = set(self.real_values_test)
         print("classes in test: {}".format(classes))
+        classes_check = []
         for class_name in classes:
+            if class_name not in classes_check:
 
-            samples_i = [(np.array(self.data_test_svm[i]).reshape(1, -1), self.real_values_test[i]) if self.real_values_test[i] == class_name
-                         else None for i, value in enumerate(self.real_values_test)]
-            samples_i = [x for x in samples_i if x is not None]
-            margin_errors = []
+                classes_check.append(class_name)
+                samples_i = [(np.array(self.data_test_svm[i]).reshape(1, -1), self.real_values_test[i]) if self.real_values_test[i] == class_name
+                             else None for i, value in enumerate(self.real_values_test)]
+                samples_i = [x for x in samples_i if x is not None]
+                margin_errors = []
 
-            for i, sample in enumerate(samples_i):
+                for i, sample in enumerate(samples_i):
 
-                if self.model.predict(sample[0]) != sample[1]:
+                    if self.model.predict(sample[0]) != sample[1]:
 
-                    scores = self.model.decision_function(sample[0])
-                    scores = scores if self.kernel != "linear" else scores[0]
-                    correct_index = self.fold2_dirs.index(sample[1])
-                    distance = scores[correct_index] - scores[np.argmax(scores)]
-                    margin_errors.append((i, distance))
+                        scores = self.model.decision_function(sample[0])
+                        scores = scores if self.kernel != "linear" else scores[0]
+                        correct_index = self.fold2_dirs.index(sample[1])
+                        distance = scores[correct_index] - scores[np.argmax(scores)]
+                        margin_errors.append((i, distance))
 
-            margin_errors_values = [x[1] for x in margin_errors]
-            margin_errors_values = sorted([x for x in margin_errors_values], reverse=True)\
-                [:min(2, len(margin_errors_values))]
-            margin_errors = [x for x in margin_errors if x[1] in margin_errors_values]
+                margin_errors_values = [x[1] for x in margin_errors]
+                margin_errors_values = sorted([x for x in margin_errors_values], reverse=True)\
+                    [:min(2, len(margin_errors_values))]
+                margin_errors = [x for x in margin_errors if x[1] in margin_errors_values]
 
-            for i in margin_errors:
-                path_folder = self.params["path"] + "/" + class_name
-                all_images = os.listdir(path_folder)
-                image_path = self.params["path"] + "/{}/".format(class_name) + all_images[20 + i[0]]
-                mg = cv2.imread(image_path, -1)
-                image_string = 'image_{}_{}'.format(class_name, all_images[20 + i[0]])
-                cv2.imshow(image_string, mg)
-                print("error for: {}, is: {}".format(image_string, i[1]))
+                for i in margin_errors:
+                    path_folder = self.params["path"] + "/" + class_name
+                    all_images = os.listdir(path_folder)
+                    image_path = self.params["path"] + "/{}/".format(class_name) + all_images[20 + i[0]]
+                    mg = cv2.imread(image_path, -1)
+                    image_string = 'image_{}_{}'.format(class_name, all_images[20 + i[0]])
+                    cv2.imshow(image_string, mg)
+                    print("error for: {}, is: {}".format(image_string, i[1]))
 
     def plot_hyper_parameters(self):
         """
