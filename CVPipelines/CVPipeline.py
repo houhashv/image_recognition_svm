@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 PyCharm Editor
-
 This is yossi first file.
-
 """
 import numpy as np
 import pandas as pd
@@ -20,10 +18,23 @@ import matplotlib.pyplot as plt
 
 
 class CVPipeline:
-
+    """
+    this class is the major class for the pipeline of the SVM classifier
+    """
     def __init__(self, pipeline_type, fold1=None, fold2=None, path=None, seed=0, num_of_classes=10, train_size=20,
                  results=None):
+        """
+        constructor for creating a pipeline of SVM it has 2 subclasses
 
+        :param pipeline_type: the type of the pipeline the name of it
+        :param fold1: the indexes of the train + validation data set for fine tuning the hyper parameters
+        :param fold2: the indexes of the train + test data set for actual predition
+        :param path: the path to the location of the images
+        :param seed: the seed for making the random sampling with the same state to make experiments repeatable
+        :param num_of_classes: the number of classes in the problem
+        :param train_size: the number of pictures to use for training
+        :param results: the results of the algorithm
+        """
         self.pipeline_type = pipeline_type
         self.results_path = results
         self.kernel = None
@@ -42,6 +53,7 @@ class CVPipeline:
 
         self._images = None
 
+        # tha ranges of all the hyper parameters
         self._S_range = range(self._min_s, self._max_x, self._x_step)
         self._K_range = [x for x in range(self._min_clusters, self._max_clusters, self._clusters_step)]
         self._C_range = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000]
@@ -106,6 +118,7 @@ class CVPipeline:
         self.fold2_dirs = None
         self.indexes = {"fold1": {}, "fold2": {}}
 
+        # preparing the data for further stages
         self.data = {"fold1": {"train": {"features": {}, "features_represented": {}, "labels": []},
                                "validation": {"features": {}, "features_represented": {}, "labels": []},
                                "full_data": {"features": [], "features_prepare": {}, "labels": []}},
@@ -137,7 +150,8 @@ class CVPipeline:
 
     def get_data(self):
         """
-
+        a function that reads the data from the path located in the path parameter
+        saves the data in the data attribute under full data
         :return:
         """
         all_dirs = os.listdir(self.params["path"])
@@ -164,7 +178,8 @@ class CVPipeline:
 
     def data_preprocess(self):
         """
-
+        resizing the data and preparing it for further use in the model
+        it goes through all the possible values of S (the resize hyper parameter) and create resize image representation
         :return:
         """
         for ind, fold in enumerate((self.data["fold1"]["full_data"], self.data["fold2"]["full_data"])):
@@ -176,7 +191,9 @@ class CVPipeline:
 
     def split_the_data(self):
         """
-
+        spliting the data into the 2 folds:
+        fold 1: train and validation for hyper parameter fine tuning
+        fold 2: for actual training and testing
         :return:
         """
         for i, fold in enumerate(self.indexes.values()):
@@ -195,19 +212,18 @@ class CVPipeline:
                     data["full_data"]["labels"][indexes[self._train_size]:indexes[-1] + 1]
 
     def get_default_parameters(self):
-        """
-
+        """returns the params attribute
         :return:
         """
         return self.params
 
     def _dense_sift(self, img, s, m, scale):
-        """
-
-        :param img:
-        :param s:
-        :param m:
-        :param scale:
+        """create a sift according the parameters that are sent
+        create a dense grid sifts for a image
+        :param img: the image to create sifts for
+        :param s: the size of the image
+        :param m: the stride to take from one sift to another
+        :param scale: the diameter of the sift
         :return:
         """
         sift = cv2.xfeatures2d.SIFT_create()
@@ -218,13 +234,14 @@ class CVPipeline:
         return sift.compute(img, kp)
 
     def _bag_of_words(self, data, s, k, scale, m):
-        """
-
-        :param data:
-        :param s:
-        :param k:
-        :param scale:
-        :param m:
+        """creating the bag of words to be used a dictionary to used a part of the ML pipeline
+        creating the kmeans algorithm to help change the sifts to a representation to learn from
+        this fill create the dictionary to each possible resize representation of the images using K Means
+        :param data: the images to use in the dictionary creation
+        :param s: the size of the image
+        :param k: the number of clusters to cluster the sifts using Kmeans
+        :param scale: the diameter of the sift
+        :param m: the stride from each sift to another
         :return:
         """
         sample_sifts = None
@@ -250,14 +267,15 @@ class CVPipeline:
 
     def represent(self, data=None, s=None, k=None, scale=None, m=None, fold=None, dataset=None):
         """
-
-        :param data:
-        :param s:
-        :param k:
-        :param scale:
-        :param m:
-        :param fold:
-        :param dataset:
+        this function represent the grey like picture into a vector to learn the class from using the sifts and the
+        dictionary created by Kmeans
+        :param data: the list of images use to represent as a vetor to learn from
+        :param s: the size parameter
+        :param k: the number of clusters
+        :param scale: the diameter of the sift
+        :param m: the stride from each sift to another
+        :param fold: the fold to use (1, 2)
+        :param dataset: what part of the data are we using (train/validation/test)
         :return:
         """
         if data is None:
@@ -283,12 +301,12 @@ class CVPipeline:
 
     def _prepare_data_for_svm(self, s, k, m, scale, fold):
         """
-
-        :param s:
-        :param k:
-        :param m:
-        :param scale:
-        :param fold:
+        creates all the data to learn from, by calling the functions that create the dictionary (bag of words)
+        :param s: the image size parameter
+        :param k: the number of clusters in the Kmeans algorithm used to create the bag of words
+        :param m: the stride for each sift to the next
+        :param scale: the diameter of the sift
+        :param fold: the fold to use (1, 2)
         :return:
         """
         data_train_kmeans = self.data[fold]["train"]["features"][s]
@@ -305,10 +323,10 @@ class CVPipeline:
 
     def svm_c(self, c, gamma, degree):
         """
-
-        :param c:
-        :param gamma:
-        :param degree:
+        returns what SVM to use could be: the linear of the None linear SVM
+        :param c: penalty parameter C of the error term
+        :param gamma: Kernel coefficient for ‘rbf’
+        :param degree: degree of the polynomial kernel function (not used in this work yet)
         :return:
         """
         if self.kernel == "linear":
@@ -318,9 +336,9 @@ class CVPipeline:
 
     def _best_update(self, error, **kwargs):
         """
-
-        :param error:
-        :param kwargs:
+        updates the hyper parameters based
+        :param error: the new best error to update
+        :param kwargs: the values to update
         :return:
         """
         self.best_error_tuning = error
@@ -333,7 +351,7 @@ class CVPipeline:
 
     def train_with_tuning(self):
         """
-
+        training the algorithm on the fold 1 data set to make the fine tuning for learning
         :return:
         """
         iteration = 0
@@ -385,13 +403,14 @@ class CVPipeline:
                                                   "S": s, "K": k, "C": c, "M": m, "radii": scale, "gamma": gamma,
                                                   "degree": degree})
 
+        # saving the results
         pickle.dump(stats, open("{}/stats_{}.p".format(self.results_path, self.kernel), "wb"))
         pickle.dump(self.params["hyper_parameters"], open("{}/hyper_params_{}.p".format(self.results_path, self.kernel),
                                                           "wb"))
 
     def train(self):
         """
-
+        traing the algorithm on the fold 2 data set
         :return:
         """
         self.params["hyper_parameters"] = pickle.load(open("{}/hyper_params_{}.p".format(self.results_path, self.kernel),
@@ -414,7 +433,7 @@ class CVPipeline:
 
     def test(self):
         """
-
+        testing the algorithm that was learned over the fold 2 dataset
         :return:
         """
         self.predictions = self.model.predict(self.data_test_svm)
@@ -422,7 +441,7 @@ class CVPipeline:
 
     def evaluate(self):
         """
-
+        evaluate the algorithm on the dataset
         :return:
         """
         labels = list(set(self.real_values_test)).sort()
@@ -430,7 +449,7 @@ class CVPipeline:
 
     def _largest_margin(self):
         """
-
+        calculate the largest margin
         :return:
         """
         classes = list(set(self.real_values_test))
@@ -472,7 +491,7 @@ class CVPipeline:
 
     def plot_hyper_parameters(self):
         """
-
+        ploting the hyper parameters
         :return:
         """
         stats_linear = pickle.load(open(os.getcwd() + "/results/stats_{}.p".format(self.kernel), "rb"))
@@ -518,7 +537,7 @@ class CVPipeline:
 
     def report_results(self):
         """
-
+        print out the result
         :return:
         """
         print("the error on the test dataset is:{}".format(self.error_test))

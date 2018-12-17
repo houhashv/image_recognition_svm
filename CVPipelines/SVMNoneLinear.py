@@ -6,25 +6,25 @@ class SVMNoneLinear:
 
     def __init__(self, C=0.001, kernel="rbf", degree=3, gamma='auto', decision_function_shape='ovr'):
         '''
-
-        :param c:
-        :param kernel:
-        :param degree:
-        :param gamma:
-        :param decision_function_shape:
+        :param c: the penalty parameter C of the error term
+        :param kernel: the kernel to use (in our case is the rbf only)
+        :param degree: the degree of the polynomial (not used)
+        :param gamma: the kernel coefficient for ‘rbf’
+        :param decision_function_shape: the
         '''
         self.C = C
         self.kernel = kernel
         self.degree = degree
         self.gamma = gamma
-        self.decision_function_shape = decision_function_shape
+        # self.decision_function_shape = decision_function_shape
+        # the classifiers to use
         self.classifiers = {}
 
     def fit(self, features, y):
         '''
-
-        :param features:
-        :param y:
+        fiting the algorithm over the one verses rest method
+        :param features: the features from the image
+        :param y: the class to predict
         :return:
         '''
         for class_name in set(y):
@@ -36,8 +36,8 @@ class SVMNoneLinear:
 
     def predict(self, features):
         '''
-
-        :param features:
+        predicting the class
+        :param features: the features of the image
         :return:
         '''
         predictions = []
@@ -58,9 +58,9 @@ class SVMNoneLinear:
 
     def score(self, features, y):
         '''
-
-        :param features:
-        :param y:
+        the socre of the algorithm
+        :param features: the features of the image
+        :param y: the class of the image
         :return:
         '''
         predictions = self.predict(features)
@@ -72,8 +72,8 @@ class SVMNoneLinear:
 
     def decision_function(self, features):
         '''
-
-        :param features:
+        the distance of the samples X to the separating hyperplane
+        :param features: the features of the image
         :return:
         '''
         predictions = []

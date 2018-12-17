@@ -12,7 +12,7 @@ def main():
 
     fold1 = [x for x in range(0, 10)]
     class_indices = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    path_photos = "C:/Users/yossi/Downloads/101_ObjectCategories"
+    path_photos = "C:/Users/yossi/PycharmProjects/ComputerVisionTask1/101_ObjectCategories"
     path_results = os.getcwd() + "/results"
 
     pipeline_linear = CVPipelineLinear("dense SIFT + KMEANS + linear SVM", fold1=fold1, fold2=class_indices,
@@ -32,9 +32,9 @@ def main():
     new_time = time.time()
     pipeline_linear.split_the_data()
     print("time for split_the_data in seconds is {}".format((time.time() - new_time)))
-    # new_time = time.time()
-    # pipeline_linear.train_with_tuning()
-    # print("time for train_with_tuning in seconds is {}".format((time.time() - new_time)))
+    new_time = time.time()
+    pipeline_linear.train_with_tuning()
+    print("time for train_with_tuning in seconds is {}".format((time.time() - new_time)))
     new_time = time.time()
     pipeline_linear.train()
     print("time for train in seconds is {}".format((time.time() - new_time)))
@@ -60,9 +60,9 @@ def main():
     new_time = time.time()
     pipeline_non_linear.split_the_data()
     print("time for split_the_data in seconds is {}".format((time.time() - new_time)))
-    # new_time = time.time()
-    # pipeline_non_linear.train_with_tuning()
-    # print("time for train_with_tuning in seconds is {}".format((time.time() - new_time)))
+    new_time = time.time()
+    pipeline_non_linear.train_with_tuning()
+    print("time for train_with_tuning in seconds is {}".format((time.time() - new_time)))
     new_time = time.time()
     pipeline_non_linear.train()
     print("time for train in seconds is {}".format((time.time() - new_time)))
