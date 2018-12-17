@@ -4,7 +4,7 @@ import numpy as np
 
 class SVMNoneLinear:
 
-    def __init__(self, c, kernel, degree=3, gamma='auto', decision_function_shape='ovr'):
+    def __init__(self, C=0.001, kernel="rbf", degree=3, gamma='auto', decision_function_shape='ovr'):
         '''
 
         :param c:
@@ -13,7 +13,7 @@ class SVMNoneLinear:
         :param gamma:
         :param decision_function_shape:
         '''
-        self.c = c
+        self.C = C
         self.kernel = kernel
         self.degree = degree
         self.gamma = gamma
@@ -29,7 +29,7 @@ class SVMNoneLinear:
         '''
         for class_name in set(y):
 
-            svm = SVC(kernel=self.kernel, C=self.c, degree=self.degree, gamma=self.gamma)
+            svm = SVC(kernel=self.kernel, C=self.C, degree=self.degree, gamma=self.gamma)
             self.classifiers[class_name] = svm
             y_class = [label if label == class_name else "other" for label in y]
             self.classifiers[class_name] = svm.fit(features, y_class)
@@ -88,6 +88,8 @@ class SVMNoneLinear:
                 classes.append(class_name)
                 i_values.append(cls.decision_function(np.array(sample).reshape(1, -1)))
 
-            predictions.append(classes)
+            # predictions.append(classes)
 
-        return np.asarray(predictions)
+        # return np.asarray(predictions)
+
+        return np.asarray(i_values)
