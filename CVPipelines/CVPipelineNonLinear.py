@@ -1,5 +1,4 @@
 from CVPipelines.CVPipeline import CVPipeline
-from CVPipelines.SVMNoneLinear import SVMNoneLinear
 
 
 class CVPipelineNonLinear(CVPipeline):
