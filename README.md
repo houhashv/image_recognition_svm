@@ -40,7 +40,7 @@ Kmeans algorithm: sklearn (link)
 
 ## Important details for algorithms we use
 
-###SVM algorithm: 
+### SVM algorithm: 
 Important parameters - C the SVM tradeoff parameter, gamma when using an RBF kernel, degree the polynomial degree when using a polynomial kernel. 
 In order implement "one vs. all" approach with a linear case of SVM, use "LinearSVC" function and set the variable multi_class=”ovr”. For other cases, there is no implementation by sklearn, and you'll need to implement it:
 	Write a function n_class_SVM_train which loops through the M classes and trains M binary classifiers in one-versus-all method
