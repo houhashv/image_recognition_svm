@@ -1,4 +1,4 @@
-# Image classifier using Kmenas, dense SIFTs and Linear and None linear SVM
+# Image classifier using Kmenas, dense SIFTs and Linear and Non linear SVM
 
 Implement an object recognition pipe
 Train it on a subset of the Caletch101 dataset
